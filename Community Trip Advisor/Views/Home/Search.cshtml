@@ -1,0 +1,41 @@
+﻿@model List<Place>
+@{
+    ViewData["Title"] = "ListPlaces";
+}
+
+<form asp-action="Search" style="padding-bottom: 25px;">
+    <div class="row">
+        <div class="col-3">
+            <label class="control-label">Search term</label>
+        </div>
+        <div class="col-6">
+            <input type="text" name="searchTerm" class="form-control" />
+        </div>
+        <div class="col-3 ">
+            <input id="searchButton" type="submit" value="Confirm" class="form-control bg-success" />
+        </div>
+    </div>
+</form>
+
+<div class="text-center">
+    <h1 class="display-4">Welcome on the CTA!</h1>
+    <p>The world's first community supported trip advisor</p>
+   
+        <div class="container">
+            <div class="row">
+                @foreach (var place in Model)
+                {
+                <div class="col-sm">
+                    <div class="container">
+                     <img style="width:300px;height:450px; margin-bottom: 10px;" src="/Images/@place.ImgPath" />
+                     <div class="bottom-left">@Html.ActionLink(@place.Name, "Details", "Home", new { id = place.ID }, new {@style="color:#000000;"})</div>
+                     </div>
+                     @if(string.Equals("admin@gmail.com", User.Identity.Name))
+                    {
+                        @Html.ActionLink("Delete", "Delete", "Home", new { id = place.ID }, null)
+                    }
+                </div>
+                }
+            </div>
+        </div>
+    </div>

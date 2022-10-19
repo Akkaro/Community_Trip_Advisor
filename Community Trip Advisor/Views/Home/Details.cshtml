@@ -1,0 +1,261 @@
+﻿@model Community_Trip_Advisor.Models.Place
+
+@{
+    ViewData["Title"] = "Details";
+}
+<style>
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 15px;
+  display: flex;
+}
+
+.left-column {
+  width: 65%;
+  position: relative;
+}
+
+.right-column {
+    width: 35%;
+    margin-left: 3cm;
+}
+
+.img-main {
+    max-width: -webkit-fill-available;
+}
+.place-description {
+  border-bottom: 1px solid #E1E8EE;
+  margin-bottom: 20px;
+}
+.place-description span {
+  font-size: 12px;
+  color: #358ED7;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+.place-description h1 {
+  font-weight: 300;
+  font-size: 52px;
+  color: #43484D;
+  letter-spacing: -2px;
+}
+.place-description p {
+  font-size: 16px;
+  font-weight: 300;
+  color: #86939E;
+  line-height: 24px;
+}
+
+.flex { display : flex }
+
+.comment_det {
+    display: inline-block;
+}
+
+.comment_element {
+    object-position: left center;
+}
+</style>
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+    <!-- CSS -->
+    <link href="style.css" rel="stylesheet">
+    <meta name="robots" content="noindex,follow" />
+
+  </head>
+
+  <body>
+    <main class="container">
+
+      <!-- Left Column / Headphones Image -->
+      <div class="left-column">
+        <img class="img-main" src="/Images/@Model.ImgPath" alt="">
+      </div>
+
+
+      <!-- Right Column -->
+      <div class="right-column">
+
+
+        <div class="place-description">
+          <span>Details</span>
+          <h1>@Model.Name</h1>
+          
+          @if(Model.Comments.Count>0)
+          {
+              @:<div class="flex">
+              @:<i class="fa fa-star fa-3x" aria-hidden="true" style="font-size:36px;color:orange"></></i>
+              @:<h1>@Model.RatingValue</h1>
+              @:</div>
+          }
+          
+        </div>
+
+
+        <div class="place-details">
+            <p>@Model.Description</p>
+
+
+        </div>
+
+
+      <!--- js for star ratings in comment section --->  
+<div>
+    <script type="text/javascript">
+        function CRateOut(rating) {
+            for (var i = 1; i <= rating; i++) {
+                $("#span" + i).attr('class', 'fa fa-star')
+            }
+        }
+        
+        function CRateOver(rating) {
+            for (var i = 1; i <= rating; i++) {
+                $("#span" + i).attr('class', 'fa fa-star checked')
+            }
+        }
+        
+        function CRateClick(rating) {
+            $("#lblRating").val(rating);
+            for (var i = 1; i <= rating; i++) {
+                $("#span" + i).attr('class', 'fa fa-star checked')
+            }
+            for (var i = rating + 1; i <= 5; i++) {
+                $("#span" + i).attr('class', 'fa fa-star')
+            }
+        }
+        
+        function CRateSelected() {
+            var rating = $("#lblRating").val();
+            for (var i = 1; i <= rating; i++) {
+                $("#span" + i).attr('class', 'fa fa-star checked')
+            }
+        
+        }
+
+        function VerifyRating() {
+            var rating = $("#lblRating").val();
+            if(rating == "0") {
+                alert("Please Select Rating.");
+                return false;
+            }
+        }
+    </script>
+
+    <!--- Comment posting --->
+
+    @if(string.Equals("admin@gmail.com", User.Identity.Name))
+    {
+        @Html.ActionLink("Update", "Update", "Home", new { id = Model.ID }, null)
+    }
+    @if(User.Identity.Name != null && Model.Comments.Count==0)
+    {
+        <h3>No ratings yet! Be the first who rates this place!</h3>
+    }
+    @if(User.Identity.Name != null)
+    {
+        <h3>Please eneter your Comment:</h3>
+        @using(Html.BeginForm("AddComment", "Home", FormMethod.Post, new{onsubmit = "return VerifyRating()"}))
+        {
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+            <textarea rows = "6" cols = "50" name="placeComment" id="txtPlaceComment"></textarea>
+            <div onmouseout="CRateSelected()">
+            <span id="span1" onmouseout="CRateOut(1)" onmouseover="CRateOver(1)" onclick="CRateClick(1)" class="fa fa-star"></span>
+            <span id="span2" onmouseout="CRateOut(2)" onmouseover="CRateOver(2)" onclick="CRateClick(2)"class="fa fa-star"></span>
+            <span id="span3" onmouseout="CRateOut(3)" onmouseover="CRateOver(3)" onclick="CRateClick(3)"class="fa fa-star"></span>
+            <span id="span4" onmouseout="CRateOut(4)" onmouseover="CRateOver(4)" onclick="CRateClick(4)"class="fa fa-star"></span>
+            <span id="span5" onmouseout="CRateOut(5)" onmouseover="CRateOver(5)" onclick="CRateClick(5)"class="fa fa-star"></span>
+            </div>
+            <div>
+                <input type="hidden" name="rating" id="lblRating" value="0">
+            </div>
+            <div>
+                <input type="hidden" name="placeID" id="lblRating" value="@Model.ID">
+            </div>
+            <div>
+                <input type="submit" class="btn-primary btn-primary active" name="SaveComment" value="SaveComment"/>
+            </div>
+
+            
+        }
+    }
+
+    @if(Model.Comments.Count>0)
+    { 
+        <h3>Comments and Ratings of other visitors</h3>
+    }
+
+
+
+    <!--- Comment listing --->
+    
+    @foreach(var item in Model.Comments)
+    {
+        
+        <table style=width: 100>
+           
+            <tr>
+                <td>
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+                    @for(int i = 0; i < @item.Rating; i++)
+                    {
+                        <span class="fa fa-star checked"></span>
+                    }
+                    @for(int i = @item.Rating; i < 5; i++)
+                    {
+                        <span class="fa fa-star"></span>
+                    }
+                    
+                </td>
+                
+            </tr>
+
+            <tr>
+                <td>
+                    @if(item.AddedBy != null)
+                    {
+                        <div class = "comment_det"><b>@item.AddedBy</b></div>
+                    }
+                    <div class = "comment_det"><p>@item.CommentedOn.ToString("dd-MMM-yyyy")</p></div>
+                    
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @item.CommmentDescription
+                </td>
+            </tr>
+            
+            @if(string.Equals("admin@gmail.com", User.Identity.Name))
+                    {
+                        <tr>
+                <td>
+                    @Html.ActionLink("Delete", "DeleteComment", "Home", new { id = item.CommentID }, null)
+                </td>
+            </tr>
+                        
+                    }
+            
+        </table>
+    }
+    
+   </div>
+    </div>
+</main>
+  </body>
+</html>
+    

@@ -1,0 +1,73 @@
+﻿@model List<Place>
+@{
+    ViewData["Title"] = "ListPlaces";
+}
+
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<div class="text-center">
+    <h1 class="display-4">Welcome on the CTA!</h1>
+    <p>The world's first community supported trip advisor</p>
+</div>
+<!-- Slideshow container -->
+<div class="slideshow-container">
+
+  <!-- Full-width images with number and caption text -->
+  <div class="text-center">
+    <h2 class="display-4">These are the top rated ones</h2>
+  </div>
+
+  <div class="mySlides fade">
+    <img src="/Images/@Model[0].ImgPath" style="width:100%">
+    <div class="w3-display-bottomleft w3-large w3-container w3-padding-16 w3-black" style="text-decoration:none" >@Html.ActionLink(@Model[0].Name, "Details", "Home", new { id = @Model[0].ID }, new {@style="color:#FFFFFF;"})</div>
+  </div>
+
+  <div class="mySlides fade">
+    <img src="/Images/@Model[1].ImgPath" style="width:100%">
+    <div class="w3-display-bottomleft w3-large w3-container w3-padding-16 w3-black" style="text-decoration:none" >@Html.ActionLink(@Model[1].Name, "Details", "Home", new { id = @Model[1].ID }, new {@style="color:#FFFFFF;"})</div>
+  </div>
+ 
+  <div class="mySlides fade">
+    <img src="/Images/@Model[2].ImgPath" style="width:100%">
+    <div class="w3-display-bottomleft w3-large w3-container w3-padding-16 w3-black" style="text-decoration:none" >@Html.ActionLink(@Model[2].Name, "Details", "Home", new { id = @Model[2].ID }, new {@style="color:#FFFFFF;"})</div>
+  </div>
+
+  <div class="mySlides fade">
+    <img src="/Images/@Model[3].ImgPath" style="width:100%">
+    <div class="w3-display-bottomleft w3-large w3-container w3-padding-16 w3-black" style="text-decoration:none" >@Html.ActionLink(@Model[3].Name, "Details", "Home", new { id = @Model[3].ID }, new {@style="color:#FFFFFF;"})</div>
+  </div>
+
+  <div class="mySlides fade">
+    <img src="/Images/@Model[4].ImgPath" style="width:100%">
+    <div class="w3-display-bottomleft w3-large w3-container w3-padding-16 w3-black" style="text-decoration:none" >@Html.ActionLink(@Model[4].Name, "Details", "Home", new { id = @Model[4].ID }, new {@style="color:#FFFFFF;"})</div>
+  </div>
+
+  <!-- Next and previous buttons -->
+  <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+  <a class="next" onclick="plusSlides(1)">&#10095;</a>
+</div>
+
+
+<div class="text-center">
+    <h1 class="display-4">Some of your favourite places</h1>
+    <p>The world's first community supported trip advisor</p>
+</div>
+
+
+<div class="container">
+            <div class="row">
+                @foreach (var place in Model)
+                {
+                <div class="col-sm">
+                    <div class="container">
+                     <img style="width:300px;height:450px; margin-bottom: 10px;" src="/Images/@place.ImgPath" />
+                     <div class="bottom-left">@Html.ActionLink(@place.Name, "Details", "Home", new { id = place.ID }, new {@style="color:#000000;"})</div>
+                     </div>
+                     @if(string.Equals("admin@gmail.com", User.Identity.Name))
+                    {
+                        @Html.ActionLink("Delete", "Delete", "Home", new { id = place.ID }, null)
+                    }
+                </div>
+                }
+            </div>
+        </div>
